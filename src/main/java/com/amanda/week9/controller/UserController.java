@@ -6,6 +6,7 @@ import com.amanda.week9.response.*;
 import com.amanda.week9.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +16,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @Slf4j
-@RequestMapping( value = "/api")
+//@RequestMapping( value = "/api")
 public class UserController {
 
     private final UserService userService;
@@ -26,10 +27,13 @@ public class UserController {
     }
 
 
-    @PostMapping(value = "/register")
+    @RequestMapping (value = "/register", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegisterResponse> register(@RequestBody UserDto userDto) {
         log.info("Successfully Registered {} ", userDto.getEmail());
-        return new ResponseEntity<>(userService.register(userDto),CREATED);
+        RegisterResponse registerResponse = userService.register(userDto);
+        System.out.println("======registerResponse "+ registerResponse);
+        return new ResponseEntity<>(registerResponse,CREATED);
     }
 
     @PostMapping(value = "/create")
@@ -52,7 +56,8 @@ public class UserController {
 
     @GetMapping(value = "/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginDto loginDto){
-           return new ResponseEntity<>(userService.login(loginDto),ACCEPTED);
+        LoginResponse loginResponse =userService.login(loginDto);
+           return new ResponseEntity<>(loginResponse,ACCEPTED);
     }
 
 
